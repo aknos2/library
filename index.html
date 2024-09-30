@@ -26,7 +26,7 @@
         </div>
 
         <div class="main">
-             <div class="cards">
+             <div class="cards" id="book1">
                 <img src="imgs/lewis-pC_kzUrdxoY-unsplash.jpg" alt="Book1">
                 <ul class="card-description">
                     <l1>Title: Da Lat</l1>
@@ -34,7 +34,7 @@
                     <l1>Pages: 70</l1>
                 </ul>
             </div>
-            <div class="cards">
+            <div class="cards" id="book2">
                 <img src="imgs/morgan-housel-aZ_MmSmAcjg-unsplash.jpg" alt="Book2">
                 <ul class="card-description">
                     <l1>Title: The Psychology of Money</l1>
@@ -42,7 +42,7 @@
                     <l1>Pages: 256</l1>
                 </ul>
             </div>
-            <div class="cards">
+            <div class="cards" id="book3">
                 <img src="imgs/thought-catalog-V5BGaJ0VaLU-unsplash.jpg" alt="Book3">
                 <ul class="card-description">
                     <l1>Title: 101 Essays that will change the way you Think</l1>
@@ -51,6 +51,29 @@
                 </ul>
             </div>
         </div>
+
+        <button id="add-button" type="button" onclick="openForm()">Add +</button>
+    </div>
+
+    <div class="form"  id="form">
+        <form action="#" method="post">
+            <h1>Fill up the form</h1>
+
+            <label for="title"><b>Title:</b></label>
+            <input type="text" id="title" name="title" placeholder="Enter Book Title"><br><br>
+
+            <label for="author"><b>Author:</b></label>
+            <input type="text" id="author" name="author" placeholder="Enter authors'name"><br><br>
+
+            <label for="pages"><b>Pages:</b></label>
+            <input type="text" id="pages" name="pages" placeholder="Enter number of pages"><br><br>
+
+            <label for="finished"><b>Finished reading?</b></label>
+            <input type="checkbox">
+
+            <button type="submit" class="form-button">Add book</button>
+            <button type="button" class="form-button-cancel" onclick="closeForm()">Cancel</button>
+        </form>
     </div>
     <script src="javascript.js"></script>
 </body>

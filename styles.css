@@ -5,13 +5,22 @@
     padding: 0;
 }
 
+:root {
+    --header-color: rgb(218, 152, 29);
+}
+
 body {
     background-color: rgb(255, 250, 245);
     margin: 0;
 }
 
+button:hover {
+    cursor: pointer;;
+    opacity: 1;
+}
+
 .header {
-    background-color: rgb(218, 152, 29);
+    background-color: var(--header-color);
     padding: 5px;
 }
 
@@ -25,6 +34,7 @@ body {
     background-image: url(icons/magnify.svg);
     background-repeat: no-repeat;
     background-position: 10px; 
+    resize: none;
 }
 
 ::placeholder {
@@ -73,4 +83,56 @@ body {
     padding: 10px;
     margin: 0;
     justify-content: space-evenly;
+}
+
+#add-button {
+    position: fixed;
+    bottom: 5%;
+    left: 90%;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color:rgb(239, 197, 72);
+    border: none;
+    opacity: 0.8;
+}
+
+#form {
+    display: none;
+    position: fixed;
+    max-width: 300px;
+    padding: 10px;
+    background-color:white;
+    bottom: 0;
+    right: 15px;
+    border: 3px solid var(--header-color);
+    z-index: 9;
+}
+
+.form input[type=text] {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    background-color: #f1f1f1;
+    margin: 5px 0 10px 0;
+}
+
+.form input[type=checkbox] {
+    margin-bottom: 20px;
+    width: 20px;
+}
+
+.form-button, .form-button-cancel {
+    background-color: #04AA6D;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom:10px;
+    opacity: 0.8;
+}
+
+.form-button-cancel {
+    background-color: red;
 }
