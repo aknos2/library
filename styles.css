@@ -21,7 +21,7 @@ button:hover {
 
 .header {
     background-color: var(--header-color);
-    padding: 5px;
+    padding: 5px;   
 }
 
 .header input[type=text] {
@@ -77,6 +77,7 @@ button:hover {
     height: 300px;
     object-fit: cover;
     transition: opacity 0.3s ease;
+    position: relative;
 }
 
 .img-button {
@@ -91,16 +92,6 @@ button:hover {
     opacity: 0.5;
 }
 
-
-.card-description {
-    display: grid;
-    grid-template-columns: 1fr;
-    justify-content: space-evenly;
-    padding: 10px;
-    list-style: none;
-    margin-bottom: 5px;
-    font-size: 1.2rem;
-}
 
 #add-button {
     position: fixed;
@@ -123,6 +114,16 @@ button:hover {
     right: 15px;
     top: 10px;
     display: none;
+}
+
+.card-description {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: space-evenly;
+    padding: 10px;
+    list-style: none;
+    margin-bottom: 5px;
+    font-size: 1.2rem;
 }
 
 #form {
@@ -169,3 +170,23 @@ button:hover {
 form > h1 {
     text-align: center;
 }
+
+.remove-confirmation-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+} 
+
+.remove-confirmation-message button {
+    font-size: 1.8rem;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.confirm-remove:hover, .cancel-remove:hover {
+    background-color: rgb(232, 40, 40);
+    opacity: 0.9;
+}
+

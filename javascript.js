@@ -4,7 +4,6 @@ const main = document.querySelector(".main");
 const addButton = document.querySelector("#add-button");
 const form = document.querySelector(".form");
 const formButton = document.querySelector(".form-button");
-const removeButtons = document.querySelectorAll(".remove-button");
 
 
 function Book(id, title, author, pages, image, finished = false) {
@@ -57,7 +56,11 @@ const displayLibrary = () => {
         <div class="cards" id="book-${book.id}">
             <div class="img-button">
                 <img src="${book.image}" alt="${book.title}">
-                <button class="remove-button" data-id="${book.id}"><b>X</b></button>
+                <button class="remove-button" data-id="${book.id}">X</button>
+                    <div class="remove-confirmation-message">
+                        <button class="confirm-remove" id="confirm-remove">Delete</button> <br><br><br>
+                        <button class="cancel-remove" id="cancel-remove">Cancel</button>
+                    </div>
             </div>
             <ul class="card-description">
                 <li><b>Title</b>: ${book.title}</li><br>
@@ -68,18 +71,47 @@ const displayLibrary = () => {
     });
 
     // Attach remove functionality to the newly created remove buttons
+    attachRemoveEvent();
+}
 
+const attachRemoveEvent = () => {
+    document.querySelectorAll('.remove-button').forEach(button => {
+        button.addEventListener("click", event => {
+            const bookId = event.target.getAttribute("data-id");
+            const card = document.getElementById(`book-${bookId}`);
+            const confirmationMessage = card.querySelector('.remove-confirmation-message');
+            
+            // Show the confirmation message
+            confirmationMessage.style.display = "block"; 
+            
+            // Handle confirmation
+            const removeButtonConfirmation = confirmationMessage.querySelector('.confirm-remove');
+            const removeButtonCancel = confirmationMessage.querySelector('.cancel-remove');
+            
+            removeButtonConfirmation.addEventListener("click", () => {
+                removeBook(bookId);
+                confirmationMessage.style.display = "none"; // Hide after confirmation
+            });
+            
+            removeButtonCancel.addEventListener("click", () => {
+                confirmationMessage.style.display = "none"; // Hide on cancel
+            });
+        });
+    });
 };
 
 
+const removeBook = (bookId) => {
+    const bookIndex = library.findIndex(book => book.id === bookId);
+
+    if (bookIndex !== -1) {
+        library.splice(bookIndex, 1);
+        displayLibrary();
+    }
+}
 
 startingBooks();
-
-
 formButton.addEventListener("click", addBookToLibrary);
-
-
-
 
 function openForm() {
     document.getElementById("form").style.display = "block";
