@@ -27,27 +27,36 @@
 
         <div class="main">
              <div class="cards" id="book1">
-                <img src="imgs/lewis-pC_kzUrdxoY-unsplash.jpg" alt="Book1">
+                <div class="img-button">
+                    <img src="imgs/lewis-pC_kzUrdxoY-unsplash.jpg" alt="Book1">
+                    <button class="remove-button"><b>X</b></button>
+                </div>
                 <ul class="card-description">
-                    <l1>Title: Da Lat</l1>
-                    <l1>Author: Nguyen Vinh</l1>
-                    <l1>Pages: 70</l1>
+                    <li><b>Title</b>: Da Lat</li><br>
+                    <li><b>Author</b>: Nguyen Vinh</li><br>
+                    <li><b>Pages</b>: 70</li>
                 </ul>
             </div>
             <div class="cards" id="book2">
-                <img src="imgs/morgan-housel-aZ_MmSmAcjg-unsplash.jpg" alt="Book2">
+                <div class="img-button">
+                    <img src="imgs/morgan-housel-aZ_MmSmAcjg-unsplash.jpg" alt="Book2">
+                    <button class="remove-button"><b>X</b></button>
+                </div>
                 <ul class="card-description">
-                    <l1>Title: The Psychology of Money</l1>
-                    <l1>Author: Morgan Housel</l1>
-                    <l1>Pages: 256</l1>
+                    <li><b>Title</b>: The Psychology of Money</li><br>
+                    <li><b>Author</b>: Morgan Housel</li><br>
+                    <li><b>Pages</b>: 256</li>
                 </ul>
             </div>
             <div class="cards" id="book3">
-                <img src="imgs/thought-catalog-V5BGaJ0VaLU-unsplash.jpg" alt="Book3">
+                <div class="img-button">
+                    <img src="imgs/thought-catalog-V5BGaJ0VaLU-unsplash.jpg" alt="Book3">
+                    <button class="remove-button"><b>X</b></button>
+                </div>
                 <ul class="card-description">
-                    <l1>Title: 101 Essays that will change the way you Think</l1>
-                    <l1>Author: Brianna West</l1>
-                    <l1>Pages: 448</l1>
+                    <li><b>Title</b>: 101 Essays that will change the way you Think</li><br>
+                    <li><b>Author</b>: Brianna West</li><br>
+                    <li><b>Pages</b>: 448</li>
                 </ul>
             </div>
         </div>
@@ -66,7 +75,7 @@
             <input type="text" id="author" name="author" placeholder="Enter authors'name"><br><br>
 
             <label for="pages"><b>Pages:</b></label>
-            <input type="text" id="pages" name="pages" placeholder="Enter number of pages"><br><br>
+            <input type="number" id="pages" name="pages" placeholder="Enter number of pages"><br><br>
 
             <label for="finished"><b>Finished reading?</b></label>
             <input type="checkbox">
