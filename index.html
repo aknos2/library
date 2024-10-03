@@ -17,10 +17,10 @@
 
             <div class="lower-part">
                 <ul class="nav-links">
-                    <li>All books</li>
-                    <li>Recently added</li>
-                    <li>Finished books</li>
-                    <li>Not finished books</li>
+                    <button id="all-books-button"><li>All books</li></button>
+                    <button id="recently-added-button"><li>Recently added</li></button>
+                    <button id="finished-books-button"><li>Finished books</li></button>
+                    <button id="not-finished-books-button"><li>Not finished books</li></button>
                 </ul>
             </div>
         </div>
@@ -30,6 +30,9 @@
                 <div class="img-button">
                     <img src="imgs/lewis-pC_kzUrdxoY-unsplash.jpg" alt="Book1">
                     <button class="remove-button" data-id="${book.id}"><b>X</b></button>
+                    <div class="read-message">
+                        Finished
+                    </div>
                 </div>
                 <ul class="card-description">
                     <li><b>Title</b>: Da Lat</li><br>
@@ -90,7 +93,7 @@
             <input type="number" id="pages" name="pages" placeholder="Enter number of pages"><br><br>
 
             <label for="finished"><b>Finished reading?</b></label>
-            <input type="checkbox">
+            <input type="checkbox" id="finished">
 
             <button type="submit" class="form-button">Add book</button>
             <button type="button" class="form-button-cancel" onclick="closeForm()">Cancel</button>
