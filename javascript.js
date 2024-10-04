@@ -75,8 +75,8 @@ const displayLibrary = () => {
                     </div>
             </div>
             <ul class="card-description">
-                <li><b>Title</b>: ${book.title}</li><br>
-                <li><b>Author</b>: ${book.author}</li><br>
+                <li><b>Title</b>: ${book.title}</li>
+                <li><b>Author</b>: ${book.author}</li>
                 <li><b>Pages</b>: ${book.pages}</li>
             </ul>
         </div>`;
@@ -95,39 +95,66 @@ const attachEditEvent = () => {
             const card = document.getElementById(`book-${bookId}`);
             
             const titleElement = card.querySelector('.card-description li:nth-child(1)');
-            const authorElement = card.querySelector('.card-description li:nth-child(3)');
-            const pagesElement = card.querySelector('.card-description li:nth-child(5)');
+            const authorElement = card.querySelector('.card-description li:nth-child(2)');
+            const pagesElement = card.querySelector('.card-description li:nth-child(3)');
+
+             // Add finished status editing element
+            let finishedElement = card.querySelector('.card-description .finished-status');
+            if (!finishedElement) {
+                finishedElement = document.createElement('li');
+                finishedElement.classList.add('finished-status');
+                card.querySelector('.card-description').appendChild(finishedElement);
+            }
             
             // Turn text into input fields
             titleElement.innerHTML = `<b>Title</b>: <input type="text" id="edit-title-${bookId}" value="${library.find(book => book.id === bookId).title}">`;
             authorElement.innerHTML = `<b>Author</b>: <input type="text" id="edit-author-${bookId}" value="${library.find(book => book.id === bookId).author}">`;
             pagesElement.innerHTML = `<b>Pages</b>: <input type="number" id="edit-pages-${bookId}" value="${library.find(book => book.id === bookId).pages}">`;
             
+             // Add the finished checkbox
+             pagesElement.insertAdjacentHTML('afterend', `
+                <div class="finished-section">
+                    <label id="finished-label-${bookId}" class="finished-label" for="finished-${bookId}">
+                        <b>Finished reading?</b>
+                    </label>
+                    <input type="checkbox" id="finished-${bookId}" class="finished-checkbox" ${library.find(book => book.id === bookId).finished ? 'checked' : ''}>
+                </div>
+            `);
             // Replace the Edit button with a Save button
             button.outerHTML = `<button class="save-button" data-id="${bookId}">Save</button>`;
 
             // Attach save event to the button
-            attachSaveEvent(bookId, titleElement, authorElement, pagesElement);
+            attachSaveEvent(bookId, titleElement, authorElement, pagesElement, finishedElement);
         });
     });
 }
 
-const attachSaveEvent = (bookId, titleElement, authorElement, pagesElement) => {
+const attachSaveEvent = (bookId, titleElement, authorElement, pagesElement, finishedElement) => {
     document.querySelector(`.save-button[data-id="${bookId}"]`).addEventListener('click', () => {
         const title = document.getElementById(`edit-title-${bookId}`).value;
         const author = document.getElementById(`edit-author-${bookId}`).value;
         const pages = document.getElementById(`edit-pages-${bookId}`).value;
+        const finished = document.getElementById(`finished-${bookId}`).checked;
 
         // Find the book in the library and update its properties
         const book = library.find(book => book.id === bookId);
         book.title = title;
         book.author = author;
         book.pages = pages;
+        book.finished = finished;
 
         // Update the display to show the new details
         titleElement.innerHTML = `<b>Title</b>: ${title}`;
         authorElement.innerHTML = `<b>Author</b>: ${author}`;
         pagesElement.innerHTML = `<b>Pages</b>: ${pages}`;
+         // Update the finished status display (read-message)
+         const readMessage = document.querySelector(`#book-${bookId} .read-message`);
+         readMessage.style.display = book.finished ? 'block' : 'none';
+         // Hide the finished checkbox
+        const finishedLabel = document.getElementById(`finished-label-${bookId}`);
+        const finishedCheckbox = document.getElementById(`finished-${bookId}`);
+        finishedLabel.style.display = 'none';
+        finishedCheckbox.style.display = 'none';
 
         // Replace the Save button back to Edit button
         const saveButton = document.querySelector(`.save-button[data-id="${bookId}"]`);
@@ -135,6 +162,7 @@ const attachSaveEvent = (bookId, titleElement, authorElement, pagesElement) => {
 
         // Reattach the edit event handler
         attachEditEvent();
+
     });
 }
 
@@ -186,7 +214,7 @@ const recentlyAdded = () => {
     reversedLibrary.forEach(book => {
         main.innerHTML += `
         <div class="cards" id="book-${book.id}">
-            <button class="edit-button"><img src="./icons/edit.svg" alt="edit button"></button>
+            <input type="image" src="./icons/edit.svg"  data-id="${book.id}" class="edit-button" id="edit-button" alt="edit button">
             <div class="img-button">
                 <img src="${book.image}" alt="${book.title}">
                 <button class="remove-button" data-id="${book.id}">X</button>
@@ -199,8 +227,8 @@ const recentlyAdded = () => {
                     </div>
             </div>
             <ul class="card-description">
-                <li><b>Title</b>: ${book.title}</li><br>
-                <li><b>Author</b>: ${book.author}</li><br>
+                <li><b>Title</b>: ${book.title}</li>
+                <li><b>Author</b>: ${book.author}</li>
                 <li><b>Pages</b>: ${book.pages}</li>
             </ul>
         </div>`;
@@ -208,6 +236,7 @@ const recentlyAdded = () => {
 
     // Attach remove functionality to the newly created remove buttons
     attachRemoveEvent();
+    attachEditEvent();
 }
 
 const finishedBooks = () => {
@@ -217,7 +246,7 @@ const finishedBooks = () => {
     onlyFinishedBooks.forEach(book => {
         main.innerHTML += `
         <div class="cards" id="book-${book.id}">
-            <button class="edit-button data-id="${book.id}><img src="./icons/edit.svg" alt="edit button"></button>
+            <input type="image" src="./icons/edit.svg"  data-id="${book.id}" class="edit-button" id="edit-button" alt="edit button">
             <div class="img-button">
                 <img src="${book.image}" alt="${book.title}">
                 <button class="remove-button" data-id="${book.id}">X</button>
@@ -230,8 +259,8 @@ const finishedBooks = () => {
                     </div>
             </div>
             <ul class="card-description">
-                <li><b>Title</b>: ${book.title}</li><br>
-                <li><b>Author</b>: ${book.author}</li><br>
+                <li><b>Title</b>: ${book.title}</li>
+                <li><b>Author</b>: ${book.author}</li>
                 <li><b>Pages</b>: ${book.pages}</li>
             </ul>
         </div>`;
@@ -239,7 +268,7 @@ const finishedBooks = () => {
 
     // Attach remove functionality to the newly created remove buttons
     attachRemoveEvent();
-
+    attachEditEvent();
 }
 
 const notFinishedBooks = () => {
@@ -249,7 +278,7 @@ const notFinishedBooks = () => {
     onlyNotFinishedBooks.forEach(book => {
         main.innerHTML += `
         <div class="cards" id="book-${book.id}">
-            <button class="edit-button"><img src="./icons/edit.svg" alt="edit button"></button>
+            <input type="image" src="./icons/edit.svg"  data-id="${book.id}" class="edit-button" id="edit-button" alt="edit button">
             <div class="img-button">
                 <img src="${book.image}" alt="${book.title}">
                 <button class="remove-button" data-id="${book.id}">X</button>
@@ -262,8 +291,8 @@ const notFinishedBooks = () => {
                     </div>
             </div>
             <ul class="card-description">
-                <li><b>Title</b>: ${book.title}</li><br>
-                <li><b>Author</b>: ${book.author}</li><br>
+                <li><b>Title</b>: ${book.title}</li>
+                <li><b>Author</b>: ${book.author}</li>
                 <li><b>Pages</b>: ${book.pages}</li>
             </ul>
         </div>`;
@@ -271,7 +300,7 @@ const notFinishedBooks = () => {
 
     // Attach remove functionality to the newly created remove buttons
     attachRemoveEvent();
-
+    attachEditEvent();
 }
 
 function openForm() {

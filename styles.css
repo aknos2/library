@@ -148,6 +148,10 @@ button:hover {
     font-size: 1.2rem;
 }
 
+.card-description li {
+    margin-bottom: 20px; 
+}
+
 .edit-button {
     max-width: 40px;
     max-height: 40px;
@@ -258,4 +262,9 @@ form > h1 {
     text-align: center;
     opacity: 0.9;
     display: none;
+}
+
+.finished-section {
+    display: flex; 
+    align-items: center; 
 }
