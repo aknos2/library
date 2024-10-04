@@ -24,6 +24,7 @@ button:hover {
 .header {
     background-color: var(--header-color);
     padding: 5px;   
+    box-shadow: 0 1px 1px 1px rgb(130, 128, 123);
 }
 
 .header input[type=text] {
@@ -55,6 +56,7 @@ button:hover {
     display: flex;
     justify-content: space-around;
     list-style: none;
+    margin-bottom: 10px;
 }
 
 .nav-links > button {
@@ -64,8 +66,8 @@ button:hover {
     border-radius: 5px;
     background-color: var(--header-links-color);
     opacity: 0.8;
-    border: 2px solid rgb(120, 75, 17);
-    box-shadow: 1px 1px 1px rgb(30, 30, 22);
+    border: 1px solid rgb(120, 75, 17);
+    box-shadow: 2px 2px 2px rgb(30, 30, 22);
 }
 
 .nav-links > button:hover {
@@ -145,6 +147,35 @@ button:hover {
     margin-bottom: 5px;
     font-size: 1.2rem;
 }
+
+.edit-button {
+    max-width: 40px;
+    max-height: 40px;
+    position: absolute;
+    right: 10px;
+    bottom: 10px; 
+}
+
+.edit-button:hover {
+    border: 1px solid #04AA6D;
+    border-radius: 5px;
+    background-color:rgb(113, 201, 88, 0.3) ;
+}
+
+.save-button {
+    max-width: 40px;
+    max-height: 40px;
+    position: absolute;
+    right: 10px;
+    bottom: 10px; 
+}
+
+.save-button:hover {
+    border: 1px solid #0478aa;
+    border-radius: 5px;
+    background-color:rgba(88, 137, 201, 0.3) ;
+}
+
 
 #form {
     display: none;

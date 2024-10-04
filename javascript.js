@@ -9,7 +9,6 @@ const recentlyAddedButton = document.querySelector("#recently-added-button");
 const finishedBooksButton = document.querySelector("#finished-books-button");
 const notFinishedBooksButton = document.querySelector("#not-finished-books-button");
 
-
 function Book(id, title, author, pages, image, finished = false) {
     this.id = id;
     this.title = title;
@@ -56,8 +55,6 @@ function addBookToLibrary(event) {
     displayLibrary();
 }
 
-
-
 const displayLibrary = () => {
     main.innerHTML = '';
 
@@ -65,6 +62,7 @@ const displayLibrary = () => {
     library.forEach(book => {
         main.innerHTML += `
         <div class="cards" id="book-${book.id}">
+            <input type="image" src="./icons/edit.svg"  data-id="${book.id}" class="edit-button" id="edit-button" alt="edit button">
             <div class="img-button">
                 <img src="${book.image}" alt="${book.title}">
                 <button class="remove-button" data-id="${book.id}">X</button>
@@ -86,6 +84,58 @@ const displayLibrary = () => {
 
     // Attach remove functionality to the newly created remove buttons
     attachRemoveEvent();
+    attachEditEvent();
+}
+
+
+const attachEditEvent = () => {
+    document.querySelectorAll('.edit-button').forEach(button => {
+        button.addEventListener('click', event => {
+            const bookId = event.target.getAttribute('data-id');
+            const card = document.getElementById(`book-${bookId}`);
+            
+            const titleElement = card.querySelector('.card-description li:nth-child(1)');
+            const authorElement = card.querySelector('.card-description li:nth-child(3)');
+            const pagesElement = card.querySelector('.card-description li:nth-child(5)');
+            
+            // Turn text into input fields
+            titleElement.innerHTML = `<b>Title</b>: <input type="text" id="edit-title-${bookId}" value="${library.find(book => book.id === bookId).title}">`;
+            authorElement.innerHTML = `<b>Author</b>: <input type="text" id="edit-author-${bookId}" value="${library.find(book => book.id === bookId).author}">`;
+            pagesElement.innerHTML = `<b>Pages</b>: <input type="number" id="edit-pages-${bookId}" value="${library.find(book => book.id === bookId).pages}">`;
+            
+            // Replace the Edit button with a Save button
+            button.outerHTML = `<button class="save-button" data-id="${bookId}">Save</button>`;
+
+            // Attach save event to the button
+            attachSaveEvent(bookId, titleElement, authorElement, pagesElement);
+        });
+    });
+}
+
+const attachSaveEvent = (bookId, titleElement, authorElement, pagesElement) => {
+    document.querySelector(`.save-button[data-id="${bookId}"]`).addEventListener('click', () => {
+        const title = document.getElementById(`edit-title-${bookId}`).value;
+        const author = document.getElementById(`edit-author-${bookId}`).value;
+        const pages = document.getElementById(`edit-pages-${bookId}`).value;
+
+        // Find the book in the library and update its properties
+        const book = library.find(book => book.id === bookId);
+        book.title = title;
+        book.author = author;
+        book.pages = pages;
+
+        // Update the display to show the new details
+        titleElement.innerHTML = `<b>Title</b>: ${title}`;
+        authorElement.innerHTML = `<b>Author</b>: ${author}`;
+        pagesElement.innerHTML = `<b>Pages</b>: ${pages}`;
+
+        // Replace the Save button back to Edit button
+        const saveButton = document.querySelector(`.save-button[data-id="${bookId}"]`);
+        saveButton.outerHTML = `<input type="image" src="./icons/edit.svg" data-id="${bookId}" class="edit-button" alt="edit button">`;
+
+        // Reattach the edit event handler
+        attachEditEvent();
+    });
 }
 
 const attachRemoveEvent = () => {
@@ -136,6 +186,7 @@ const recentlyAdded = () => {
     reversedLibrary.forEach(book => {
         main.innerHTML += `
         <div class="cards" id="book-${book.id}">
+            <button class="edit-button"><img src="./icons/edit.svg" alt="edit button"></button>
             <div class="img-button">
                 <img src="${book.image}" alt="${book.title}">
                 <button class="remove-button" data-id="${book.id}">X</button>
@@ -166,6 +217,7 @@ const finishedBooks = () => {
     onlyFinishedBooks.forEach(book => {
         main.innerHTML += `
         <div class="cards" id="book-${book.id}">
+            <button class="edit-button data-id="${book.id}><img src="./icons/edit.svg" alt="edit button"></button>
             <div class="img-button">
                 <img src="${book.image}" alt="${book.title}">
                 <button class="remove-button" data-id="${book.id}">X</button>
@@ -197,6 +249,7 @@ const notFinishedBooks = () => {
     onlyNotFinishedBooks.forEach(book => {
         main.innerHTML += `
         <div class="cards" id="book-${book.id}">
+            <button class="edit-button"><img src="./icons/edit.svg" alt="edit button"></button>
             <div class="img-button">
                 <img src="${book.image}" alt="${book.title}">
                 <button class="remove-button" data-id="${book.id}">X</button>
