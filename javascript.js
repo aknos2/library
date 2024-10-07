@@ -88,6 +88,8 @@ const displayLibrary = () => {
 }
 
 
+// Edit book function
+
 const attachEditEvent = () => {
     document.querySelectorAll('.edit-button').forEach(button => {
         button.addEventListener('click', event => {
@@ -166,6 +168,9 @@ const attachSaveEvent = (bookId, titleElement, authorElement, pagesElement, fini
     });
 }
 
+
+// Remove book function
+
 const attachRemoveEvent = () => {
     document.querySelectorAll('.remove-button').forEach(button => {
         button.addEventListener("click", event => {
@@ -201,6 +206,55 @@ const removeBook = (bookId) => {
         displayLibrary();
     }
 }
+
+
+// Search book function
+
+document.getElementById("book-search-form").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const searchQuery = document.getElementById("searchbar").value.toLowerCase();
+    
+    const filteredBooks = library.filter(book => 
+        book.title.toLowerCase().includes(searchQuery) ||
+        book.author.toLowerCase().includes(searchQuery)
+    );
+
+    console.log('Filtered Books:', filteredBooks);
+    
+    displayFilteredBooks(filteredBooks);
+});
+
+const displayFilteredBooks = (filteredBooks) => {
+    main.innerHTML = "";
+
+    if(filteredBooks.length === 0) {
+        main.innerHTML = `<p>No Books Found</p>`;
+        return;
+    }
+
+    filteredBooks.forEach(book => {
+        main.innerHTML += `
+        <div class="cards" id="book-${book.id}">
+            <div class="img-button">
+                <img src="${book.image}" alt="${book.title}">
+                <button class="remove-button" data-id="${book.id}">X</button>
+                <div class="read-message" style="display: ${book.finished ? 'block' : 'none'};">
+                    Finished
+                </div>
+            </div>
+            <ul class="card-description">
+                <li><b>Title</b>: ${book.title}</li>
+                <li><b>Author</b>: ${book.author}</li>
+                <li><b>Pages</b>: ${book.pages}</li>
+            </ul>
+        </div>`;
+    });
+
+    attachRemoveEvent();
+    attachEditEvent();
+}
+
 
 const allBooks = () => {
     main.innerHTML = "";

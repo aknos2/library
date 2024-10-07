@@ -27,17 +27,11 @@ button:hover {
     box-shadow: 0 1px 1px 1px rgb(130, 128, 123);
 }
 
-.header input[type=text] {
-    height: 25px;
-    border: 1px solid black;
-    width: 250px;
-    margin-left: 25px;
-    border-radius: 10px;
-    padding: 12px 30px 12px 40px;
-    background-image: url(icons/magnify.svg);
-    background-repeat: no-repeat;
-    background-position: 10px; 
-    resize: none;
+.header input[type=search] {
+    height: 100%;
+    border: none;
+    margin: 0;
+    width: 200px;
 }
 
 ::placeholder {
@@ -51,6 +45,40 @@ button:hover {
     justify-content: center;
 }
 
+#book-search-form {
+    height: 35px;
+    color: #555;
+    display: flex;
+    padding: 2px;
+    border: 1px solid currentColor;
+    border-radius: 10px;
+    background-color: white;
+    margin-left: 10px;
+  }
+
+#searchbar-button {
+    text-indent: -999px;
+    overflow: hidden;
+    width: 30px;
+    padding: 0;
+    margin: 0;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    background: transparent url("./icons/magnify.svg");
+    background-repeat: no-repeat;
+    opacity: 0.7;
+}
+
+#searchbar-button:hover {
+    opacity: 1;
+}
+
+button[type="submit"]:focus,
+input[type="search"]:focus {
+  box-shadow: 0 0 3px 0 #1183d6;
+  border-color: #1183d6;
+  outline: none;
+}
 
 .nav-links {
     display: flex;
@@ -78,8 +106,15 @@ button:hover {
     display: grid;
     grid-template-columns: repeat(4, minmax(250px, 350px));
     gap: 20px;
-    justify-content: space-around;
     margin: 30px;
+    overflow: auto;
+}
+
+
+@media (max-width: 1168px) {
+    .main {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Fewer columns on smaller screens */
+    }
 }
 
 .cards {

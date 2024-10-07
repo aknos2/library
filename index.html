@@ -12,7 +12,10 @@
         <div class="header">
             <div class="upper-part">
             <h1>The Library</h1>
-            <input id="searchbar" name="search" type="text" placeholder="Search">
+            <form id="book-search-form">
+            <button id="searchbar-button" type="submit"></button>
+            <input id="searchbar" name="search" type="search" placeholder="Search books...">
+            </form>
             </div>
 
             <div class="lower-part">
@@ -26,57 +29,7 @@
         </div>
 
         <div class="main">
-             <!-- <div class="cards" id="book-bookId">
-                 <input type="image" src="./icons/edit.svg"  data-id="${book.id}" class="edit-button" id="edit-button" alt="edit button">
-                <div class="img-button">
-                    <img src="imgs/lewis-pC_kzUrdxoY-unsplash.jpg" alt="Book1">
-                    <button class="remove-button" data-id="${book.id}"><b>X</b></button>
-                    <div class="read-message">
-                        Finished
-                    </div>
-                </div>
-                <ul class="card-description">
-                    <button class="edit-button"><img src="./icons/edit.svg" id="edit-button-img" alt="edit button"></button>
-                    <input type="image" src="./icons/edit.svg" id="edit-button-img" alt="edit button">
-                    <li><b>Title</b>: Da Lat</li>
-                    <li><b>Author</b>: Nguyen Vinh</li>
-                    <li><b>Pages</b>: 70</li>
-                </ul>
-                <div class="remove-confirmation-message" id="remove-confirmation-message">
-                    <button class="confirm-remove" id="confirm-remove">Delete</button> <br><br><br>
-                    <button class="cancel-remove" id="cancel-remove">Cancel</button>
-                </div>
-            </div>
-            <div class="cards" id="book-bookId">
-                <div class="img-button">
-                    <img src="imgs/morgan-housel-aZ_MmSmAcjg-unsplash.jpg" alt="Book2">
-                    <button class="remove-button" data-id="${book.id}"><b>X</b></button>
-                </div>
-                <ul class="card-description">
-                    <li><b>Title</b>: The Psychology of Money</li><br>
-                    <li><b>Author</b>: Morgan Housel</li><br>
-                    <li><b>Pages</b>: 256</li>
-                </ul>
-                <div class="remove-confirmation-message" id="remove-confirmation-message">
-                    <button class="confirm-remove" id="confirm-remove">Delete</button> <br><br><br>
-                    <button class="cancel-remove" id="cancel-remove">Cancel</button>
-                </div>
-            </div>
-            <div class="cards" id="book-bookId">
-                <div class="img-button">
-                    <img src="imgs/thought-catalog-V5BGaJ0VaLU-unsplash.jpg" alt="Book3">
-                    <button class="remove-button" data-id="${book.id}"><b>X</b></button>
-                </div>
-                <ul class="card-description">
-                    <li><b>Title</b>: 101 Essays that will change the way you Think</li><br>
-                    <li><b>Author</b>: Brianna West</li><br>
-                    <li><b>Pages</b>: 448</li>
-                </ul>
-                <div class="remove-confirmation-message" id="remove-confirmation-message">
-                    <button class="confirm-remove" id="confirm-remove">Delete</button> <br><br><br>
-                    <button class="cancel-remove" id="cancel-remove">Cancel</button>
-                </div>
-            </div> -->
+            
         </div>
 
         <button id="add-button" type="button" onclick="openForm()">Add +</button>
