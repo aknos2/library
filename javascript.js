@@ -22,9 +22,9 @@ const library = [];
 let currentBook = 2;
 
 const startingBooks = () => {
-    const book0 = new Book("book0", "Da Lat", "Nguyen Vinh", "70", "imgs/lewis-pC_kzUrdxoY-unsplash.jpg", finished);
-    const book1 = new Book("book1", "The Psychology of Money", "Morgan Housel", "256", "imgs/morgan-housel-aZ_MmSmAcjg-unsplash.jpg", finished);
-    const book2 = new Book("book2", "101 Essays that will change the way you Think", "Brianna West", "448", "imgs/thought-catalog-V5BGaJ0VaLU-unsplash.jpg");
+    const book0 = new Book("book0", "Da Lat", "Nguyen Vinh", "70", "imgs/lewis-pC_kzUrdxoY-unsplash.jpg", true);
+    const book1 = new Book("book1", "The Psychology of Money", "Morgan Housel", "256", "imgs/morgan-housel-aZ_MmSmAcjg-unsplash.jpg", true);
+    const book2 = new Book("book2", "101 Essays that will change the way you Think", "Brianna West", "448", "imgs/thought-catalog-V5BGaJ0VaLU-unsplash.jpg", false);
 
     library.push(book0, book1, book2);
 
@@ -36,10 +36,20 @@ function addBookToLibrary(event) {
     event.preventDefault();
     
     const image = "imgs/studio-media-9DaOYUYnOls-unsplash.jpg";
-    const title = document.getElementById('title').value;
-    const author = document.getElementById('author').value;
-    const pages = document.getElementById('pages').value;
+    let title = document.getElementById('title').value;
+    let author = document.getElementById('author').value;
+    let pages = document.getElementById('pages').value;
     const finished = document.getElementById("finished").checked;
+
+    if (title === "") {
+        title = "Unknown";
+    } 
+    if (author === "") {
+        author = "Unknown";
+    }
+    if (pages === "") {
+        pages = "Unknown";
+    }
 
     currentBook++;
     const newBook = new Book(`Book${currentBook}`, title, author, pages, image, finished);
