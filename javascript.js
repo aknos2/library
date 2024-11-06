@@ -1,383 +1,215 @@
-"use strict"
+"use strict";
 
-const main = document.querySelector(".main");
-const addButton = document.querySelector("#add-button");
-const form = document.querySelector(".form");
-const formButton = document.querySelector(".form-button");
-const allBooksButton = document.querySelector("#all-books-button");
-const recentlyAddedButton = document.querySelector("#recently-added-button");
-const finishedBooksButton = document.querySelector("#finished-books-button");
-const notFinishedBooksButton = document.querySelector("#not-finished-books-button");
-
-function Book(id, title, author, pages, image, finished = false) {
-    this.id = id;
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.finished = finished;
-    this.image = image;
+class Book {
+    constructor(id, title, author, pages, image, finished = false) {
+        this.id = id;
+        this.title = title || "Unknown";
+        this.author = author || "Unknown";
+        this.pages = pages || "Unknown";
+        this.finished = finished;
+        this.image = image;
+        this.dateAdded = new Date().getTime();
+    }
 }
 
-const library = [];
-let currentBook = 2;
-
-const startingBooks = () => {
-    const book0 = new Book("book0", "Da Lat", "Nguyen Vinh", "70", "imgs/lewis-pC_kzUrdxoY-unsplash.jpg", true);
-    const book1 = new Book("book1", "The Psychology of Money", "Morgan Housel", "256", "imgs/morgan-housel-aZ_MmSmAcjg-unsplash.jpg", true);
-    const book2 = new Book("book2", "101 Essays that will change the way you Think", "Brianna West", "448", "imgs/thought-catalog-V5BGaJ0VaLU-unsplash.jpg", false);
-
-    library.push(book0, book1, book2);
-
-    displayLibrary();
-}
- 
-
-function addBookToLibrary(event) {
-    event.preventDefault();
-    
-    const image = "imgs/studio-media-9DaOYUYnOls-unsplash.jpg";
-    let title = document.getElementById('title').value;
-    let author = document.getElementById('author').value;
-    let pages = document.getElementById('pages').value;
-    const finished = document.getElementById("finished").checked;
-
-    if (title === "") {
-        title = "Unknown";
-    } 
-    if (author === "") {
-        author = "Unknown";
-    }
-    if (pages === "") {
-        pages = "Unknown";
+class Library {
+    constructor() {
+        this.books = [];
+        this.currentBookId = 2;
     }
 
-    currentBook++;
-    const newBook = new Book(`Book${currentBook}`, title, author, pages, image, finished);
-
-    if (finished) {
-        document.querySelector(".read-message").style.display = "block";
-    } else if (finished === false) {
-        document.querySelector(".read-message").style.display = "none";
+    addBook(book) {
+        this.books.push(book);
     }
 
-    library.push(newBook);
+    removeBook(bookId) {
+        this.books = this.books.filter(book => book.id !== bookId);
+    }
 
-    displayLibrary();
+    getBook(bookId) {
+        return this.books.find(book => book.id === bookId);
+    }
+
+    searchBooks(query) {
+        const searchTerm = query.toLowerCase();
+        return this.books.filter(book => 
+            book.title.toLowerCase().includes(searchTerm) || 
+            book.author.toLowerCase().includes(searchTerm)
+        );
+    }
+
+    getBooksByStatus(finished = true) {
+        return this.books.filter(book => book.finished === finished);
+    }
+
+    generateNewBookId() {
+        this.currentBookId += 1;
+        return `Book${this.currentBookId}`;
+    }
 }
 
-const displayLibrary = () => {
-    main.innerHTML = '';
+class UIController {
+    constructor(mainElement, formElement, library) {
+        this.mainElement = mainElement;
+        this.formElement = formElement;
+        this.library = library;
+    }
 
-    // Loop through the library array and create cards for each book
-    library.forEach(book => {
-        main.innerHTML += `
-        <div class="cards" id="book-${book.id}">
-            <input type="image" src="./icons/edit.svg"  data-id="${book.id}" class="edit-button" id="edit-button" alt="edit button">
-            <div class="img-button">
-                <img src="${book.image}" alt="${book.title}">
-                <button class="remove-button" data-id="${book.id}">X</button>
+    displayBooks(books) {
+        this.mainElement.innerHTML = "";
+        books.forEach(book => this.mainElement.innerHTML += this.createBookCard(book));
+        this.attachEventListeners();
+    }
+
+    createBookCard(book) {
+        return `
+            <div class="cards" id="book-${book.id}">
+                <input type="image" src="./icons/edit.svg" data-id="${book.id}" class="edit-button" alt="edit button">
+                <div class="img-button">
+                    <img src="${book.image}" alt="${book.title}">
+                    <button class="remove-button" data-id="${book.id}">X</button>
                     <div class="read-message" style="display: ${book.finished ? 'block' : 'none'};">
                         Finished
                     </div>
-                    <div class="remove-confirmation-message">
-                        <button class="confirm-remove" id="confirm-remove">Delete</button> <br><br><br>
-                        <button class="cancel-remove" id="cancel-remove">Cancel</button>
-                    </div>
-            </div>
-            <ul class="card-description">
-                <li><b>Title</b>: ${book.title}</li>
-                <li><b>Author</b>: ${book.author}</li>
-                <li><b>Pages</b>: ${book.pages}</li>
-            </ul>
-        </div>`;
-    });
-
-    // Attach remove functionality to the newly created remove buttons
-    attachRemoveEvent();
-    attachEditEvent();
-}
-
-
-// Edit book function
-
-const attachEditEvent = () => {
-    document.querySelectorAll('.edit-button').forEach(button => {
-        button.addEventListener('click', event => {
-            const bookId = event.target.getAttribute('data-id');
-            const card = document.getElementById(`book-${bookId}`);
-            
-            const titleElement = card.querySelector('.card-description li:nth-child(1)');
-            const authorElement = card.querySelector('.card-description li:nth-child(2)');
-            const pagesElement = card.querySelector('.card-description li:nth-child(3)');
-
-             // Add finished status editing element
-            let finishedElement = card.querySelector('.card-description .finished-status');
-            if (!finishedElement) {
-                finishedElement = document.createElement('li');
-                finishedElement.classList.add('finished-status');
-                card.querySelector('.card-description').appendChild(finishedElement);
-            }
-            
-            // Turn text into input fields
-            titleElement.innerHTML = `<b>Title</b>: <input type="text" id="edit-title-${bookId}" value="${library.find(book => book.id === bookId).title}">`;
-            authorElement.innerHTML = `<b>Author</b>: <input type="text" id="edit-author-${bookId}" value="${library.find(book => book.id === bookId).author}">`;
-            pagesElement.innerHTML = `<b>Pages</b>: <input type="number" id="edit-pages-${bookId}" value="${library.find(book => book.id === bookId).pages}">`;
-            
-             // Add the finished checkbox
-             pagesElement.insertAdjacentHTML('afterend', `
-                <div class="finished-section">
-                    <label id="finished-label-${bookId}" class="finished-label" for="finished-${bookId}">
-                        <b>Finished reading?</b>
-                    </label>
-                    <input type="checkbox" id="finished-${bookId}" class="finished-checkbox" ${library.find(book => book.id === bookId).finished ? 'checked' : ''}>
                 </div>
-            `);
-            // Replace the Edit button with a Save button
-            button.outerHTML = `<button class="save-button" data-id="${bookId}">Save</button>`;
+                <ul class="card-description">
+                    <li><b>Title</b>: ${book.title}</li>
+                    <li><b>Author</b>: ${book.author}</li>
+                    <li><b>Pages</b>: ${book.pages}</li>
+                </ul>
+            </div>`;
+    }
 
-            // Attach save event to the button
-            attachSaveEvent(bookId, titleElement, authorElement, pagesElement, finishedElement);
+    attachEventListeners() {
+        document.querySelectorAll(".edit-button").forEach(button => {
+            button.addEventListener("click", event => this.editBook(event.target.getAttribute("data-id")));
         });
-    });
-}
+        document.querySelectorAll(".remove-button").forEach(button => {
+            button.addEventListener("click", event => this.removeBook(event.target.getAttribute("data-id")));
+        });
+    }
 
-const attachSaveEvent = (bookId, titleElement, authorElement, pagesElement, finishedElement) => {
-    document.querySelector(`.save-button[data-id="${bookId}"]`).addEventListener('click', () => {
+    editBook(bookId) {
+        const book = this.library.getBook(bookId); // Corrected to use `getBook` method
+        if (!book) return;
+    
+        const card = document.getElementById(`book-${bookId}`);
+    
+        // Replace the book card content with editable input fields
+        card.querySelector('.card-description').innerHTML = `
+            <li><b>Title</b>: <input type="text" id="edit-title-${bookId}" value="${book.title}"></li>
+            <li><b>Author</b>: <input type="text" id="edit-author-${bookId}" value="${book.author}"></li>
+            <li><b>Pages</b>: <input type="number" id="edit-pages-${bookId}" value="${book.pages}"></li>
+            <li><b>Finished</b>: <input type="checkbox" id="edit-finished-${bookId}" ${book.finished ? 'checked' : ''}></li>
+        `;
+    
+        // Replace the edit button with a save button
+        card.querySelector('.edit-button').outerHTML = `<button class="save-button" data-id="${bookId}">Save</button>`;
+    
+        // Attach an event listener to the new save button
+        document.querySelector(`.save-button[data-id="${bookId}"]`).addEventListener('click', () => this.saveBook(bookId));
+    }
+    
+    saveBook(bookId) {
+        const book = this.library.getBook(bookId);
+        if (!book) return;
+    
+        // Retrieve values from the edit fields
         const title = document.getElementById(`edit-title-${bookId}`).value;
         const author = document.getElementById(`edit-author-${bookId}`).value;
         const pages = document.getElementById(`edit-pages-${bookId}`).value;
-        const finished = document.getElementById(`finished-${bookId}`).checked;
-
-        // Find the book in the library and update its properties
-        const book = library.find(book => book.id === bookId);
+        const finished = document.getElementById(`edit-finished-${bookId}`).checked;
+    
+        // Update the book object with new values
         book.title = title;
         book.author = author;
         book.pages = pages;
         book.finished = finished;
+    
+        // Update the UI by redisplaying the updated list of books
+        this.displayBooks(this.library.books);
+    }
 
-        // Update the display to show the new details
-        titleElement.innerHTML = `<b>Title</b>: ${title}`;
-        authorElement.innerHTML = `<b>Author</b>: ${author}`;
-        pagesElement.innerHTML = `<b>Pages</b>: ${pages}`;
-         // Update the finished status display (read-message)
-         const readMessage = document.querySelector(`#book-${bookId} .read-message`);
-         readMessage.style.display = book.finished ? 'block' : 'none';
-         // Hide the finished checkbox
-        const finishedLabel = document.getElementById(`finished-label-${bookId}`);
-        const finishedCheckbox = document.getElementById(`finished-${bookId}`);
-        finishedLabel.style.display = 'none';
-        finishedCheckbox.style.display = 'none';
+    removeBook(bookId) {
+        this.library.removeBook(bookId);
+        this.displayBooks(this.library.books);
+    }
 
-        // Replace the Save button back to Edit button
-        const saveButton = document.querySelector(`.save-button[data-id="${bookId}"]`);
-        saveButton.outerHTML = `<input type="image" src="./icons/edit.svg" data-id="${bookId}" class="edit-button" alt="edit button">`;
+    addNewBook(event) {
+        event.preventDefault();
+        
+        const title = document.getElementById("title").value;
+        const author = document.getElementById("author").value;
+        const pages = document.getElementById("pages").value;
+        const finished = document.getElementById("finished").checked;
+        const image = "/imgs/studio-media-9DaOYUYnOls-unsplash.jpg"; // Default image
 
-        // Reattach the edit event handler
-        attachEditEvent();
+        const newBook = new Book(
+            this.library.generateNewBookId(),
+            title,
+            author,
+            pages,
+            image,
+            finished
+        );
 
-    });
-}
+        this.library.addBook(newBook);
+        this.displayBooks(this.library.books);
+        this.clearForm();
+    }
 
+    clearForm() {
+        document.getElementById("title").value = "";
+        document.getElementById("author").value = "";
+        document.getElementById("pages").value = "";
+        document.getElementById("finished").checked = false;
+    }
 
-// Remove book function
+    filterBooksByStatus(finished) {
+        const books = this.library.getBooksByStatus(finished);
+        this.displayBooks(books);
+    }
 
-const attachRemoveEvent = () => {
-    document.querySelectorAll('.remove-button').forEach(button => {
-        button.addEventListener("click", event => {
-            const bookId = event.target.getAttribute("data-id");
-            const card = document.getElementById(`book-${bookId}`);
-            const confirmationMessage = card.querySelector('.remove-confirmation-message');
-            
-            // Show the confirmation message
-            confirmationMessage.style.display = "block"; 
-            
-            // Handle confirmation
-            const removeButtonConfirmation = confirmationMessage.querySelector('.confirm-remove');
-            const removeButtonCancel = confirmationMessage.querySelector('.cancel-remove');
-            
-            removeButtonConfirmation.addEventListener("click", () => {
-                removeBook(bookId);
-                confirmationMessage.style.display = "none"; // Hide after confirmation
-            });
-            
-            removeButtonCancel.addEventListener("click", () => {
-                confirmationMessage.style.display = "none"; // Hide on cancel
-            });
-        });
-    });
-};
+    displayRecentlyAddedBooks() {
+        // Sort books by dateAdded in descending order (newest first)
+        const recentlyAddedBooks = this.library.books.sort((a, b) => b.dateAdded - a.dateAdded);
+        
+        // Display the sorted list
+        this.displayBooks(recentlyAddedBooks);
+    }
 
-
-const removeBook = (bookId) => {
-    const bookIndex = library.findIndex(book => book.id === bookId);
-
-    if (bookIndex !== -1) {
-        library.splice(bookIndex, 1);
-        displayLibrary();
+    searchBooks(query) {
+        const books = this.library.searchBooks(query);
+        this.displayBooks(books);
     }
 }
 
+const library = new Library();
+const uiController = new UIController(
+    document.querySelector(".main"),
+    document.querySelector(".form"),
+    library
+);
 
-// Search book function
+// Load initial books
+const initialBooks = [
+    new Book("book0", "Da Lat", "Nguyen Vinh", "70", "imgs/lewis-pC_kzUrdxoY-unsplash.jpg", true),
+    new Book("book1", "The Psychology of Money", "Morgan Housel", "256", "imgs/morgan-housel-aZ_MmSmAcjg-unsplash.jpg", true),
+    new Book("book2", "101 Essays that will change the way you Think", "Brianna West", "448", "imgs/thought-catalog-V5BGaJ0VaLU-unsplash.jpg", false)
+];
+initialBooks.forEach(book => library.addBook(book));
+uiController.displayBooks(library.books);
 
+// Event listeners
+document.getElementById("all-books-button").addEventListener("click", () => uiController.displayBooks(library.books));
+document.getElementById("finished-books-button").addEventListener("click", () => uiController.filterBooksByStatus(true));
+document.getElementById("not-finished-books-button").addEventListener("click", () => uiController.filterBooksByStatus(false));
+document.getElementById('recently-added-button').addEventListener('click', () => uiController.displayRecentlyAddedBooks());
 document.getElementById("book-search-form").addEventListener("submit", event => {
     event.preventDefault();
-
-    const searchQuery = document.getElementById("searchbar").value.toLowerCase();
-    
-    const filteredBooks = library.filter(book => 
-        book.title.toLowerCase().includes(searchQuery) ||
-        book.author.toLowerCase().includes(searchQuery)
-    );
-
-    console.log('Filtered Books:', filteredBooks);
-    
-    displayFilteredBooks(filteredBooks);
+    const query = document.getElementById("searchbar").value;
+    uiController.searchBooks(query);
 });
-
-const displayFilteredBooks = (filteredBooks) => {
-    main.innerHTML = "";
-
-    if(filteredBooks.length === 0) {
-        main.innerHTML = `<p>No Books Found</p>`;
-        return;
-    }
-
-    filteredBooks.forEach(book => {
-        main.innerHTML += `
-        <div class="cards" id="book-${book.id}">
-            <div class="img-button">
-                <img src="${book.image}" alt="${book.title}">
-                <button class="remove-button" data-id="${book.id}">X</button>
-                <div class="read-message" style="display: ${book.finished ? 'block' : 'none'};">
-                    Finished
-                </div>
-            </div>
-            <ul class="card-description">
-                <li><b>Title</b>: ${book.title}</li>
-                <li><b>Author</b>: ${book.author}</li>
-                <li><b>Pages</b>: ${book.pages}</li>
-            </ul>
-        </div>`;
-    });
-
-    attachRemoveEvent();
-    attachEditEvent();
-}
-
-
-const allBooks = () => {
-    main.innerHTML = "";
-    displayLibrary();
-}
-
-const recentlyAdded = () => {
-    main.innerHTML = "";
-    const reversedLibrary = [...library].reverse();
-
-    reversedLibrary.forEach(book => {
-        main.innerHTML += `
-        <div class="cards" id="book-${book.id}">
-            <input type="image" src="./icons/edit.svg"  data-id="${book.id}" class="edit-button" id="edit-button" alt="edit button">
-            <div class="img-button">
-                <img src="${book.image}" alt="${book.title}">
-                <button class="remove-button" data-id="${book.id}">X</button>
-                    <div class="read-message" style="display: ${book.finished ? 'block' : 'none'};">
-                        Finished
-                    </div>
-                    <div class="remove-confirmation-message">
-                        <button class="confirm-remove" id="confirm-remove">Delete</button> <br><br><br>
-                        <button class="cancel-remove" id="cancel-remove">Cancel</button>
-                    </div>
-            </div>
-            <ul class="card-description">
-                <li><b>Title</b>: ${book.title}</li>
-                <li><b>Author</b>: ${book.author}</li>
-                <li><b>Pages</b>: ${book.pages}</li>
-            </ul>
-        </div>`;
-    });
-
-    // Attach remove functionality to the newly created remove buttons
-    attachRemoveEvent();
-    attachEditEvent();
-}
-
-const finishedBooks = () => {
-    main.innerHTML = "";
-    const onlyFinishedBooks = library.filter(book => book.finished);
-
-    onlyFinishedBooks.forEach(book => {
-        main.innerHTML += `
-        <div class="cards" id="book-${book.id}">
-            <input type="image" src="./icons/edit.svg"  data-id="${book.id}" class="edit-button" id="edit-button" alt="edit button">
-            <div class="img-button">
-                <img src="${book.image}" alt="${book.title}">
-                <button class="remove-button" data-id="${book.id}">X</button>
-                    <div class="read-message" style="display: ${book.finished ? 'block' : 'none'};">
-                        Finished
-                    </div>
-                    <div class="remove-confirmation-message">
-                        <button class="confirm-remove" id="confirm-remove">Delete</button> <br><br><br>
-                        <button class="cancel-remove" id="cancel-remove">Cancel</button>
-                    </div>
-            </div>
-            <ul class="card-description">
-                <li><b>Title</b>: ${book.title}</li>
-                <li><b>Author</b>: ${book.author}</li>
-                <li><b>Pages</b>: ${book.pages}</li>
-            </ul>
-        </div>`;
-    });
-
-    // Attach remove functionality to the newly created remove buttons
-    attachRemoveEvent();
-    attachEditEvent();
-}
-
-const notFinishedBooks = () => {
-    main.innerHTML ="";
-    const onlyNotFinishedBooks = library.filter(book => book.finished === false);
-
-    onlyNotFinishedBooks.forEach(book => {
-        main.innerHTML += `
-        <div class="cards" id="book-${book.id}">
-            <input type="image" src="./icons/edit.svg"  data-id="${book.id}" class="edit-button" id="edit-button" alt="edit button">
-            <div class="img-button">
-                <img src="${book.image}" alt="${book.title}">
-                <button class="remove-button" data-id="${book.id}">X</button>
-                    <div class="read-message" style="display: ${book.finished ? 'block' : 'none'};">
-                        Finished
-                    </div>
-                    <div class="remove-confirmation-message">
-                        <button class="confirm-remove" id="confirm-remove">Delete</button> <br><br><br>
-                        <button class="cancel-remove" id="cancel-remove">Cancel</button>
-                    </div>
-            </div>
-            <ul class="card-description">
-                <li><b>Title</b>: ${book.title}</li>
-                <li><b>Author</b>: ${book.author}</li>
-                <li><b>Pages</b>: ${book.pages}</li>
-            </ul>
-        </div>`;
-    });
-
-    // Attach remove functionality to the newly created remove buttons
-    attachRemoveEvent();
-    attachEditEvent();
-}
-
-function openForm() {
-    document.getElementById("form").style.display = "block";
-}
-
-function closeForm() {
-    document.getElementById("form").style.display = "none";
-}
-
-startingBooks();
-formButton.addEventListener("click", addBookToLibrary);
-allBooksButton.addEventListener("click", allBooks);
-recentlyAddedButton.addEventListener("click", recentlyAdded);
-finishedBooksButton.addEventListener("click", finishedBooks);
-notFinishedBooksButton.addEventListener("click", notFinishedBooks);
+document.querySelector(".form-button").addEventListener("click", event => uiController.addNewBook(event));
+document.querySelector("#add-button").addEventListener("click", () => document.getElementById("form").style.display = "block");
+document.querySelector(".form-button-cancel").addEventListener("click", () => document.getElementById("form").style.display = "none");
