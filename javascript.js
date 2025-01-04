@@ -158,6 +158,7 @@ class UIController {
         this.clearForm();
     }
 
+
     clearForm() {
         document.getElementById("title").value = "";
         document.getElementById("author").value = "";
@@ -213,3 +214,5 @@ document.getElementById("book-search-form").addEventListener("submit", event => 
 document.querySelector(".form-button").addEventListener("click", event => uiController.addNewBook(event));
 document.querySelector("#add-button").addEventListener("click", () => document.getElementById("form").style.display = "block");
 document.querySelector(".form-button-cancel").addEventListener("click", () => document.getElementById("form").style.display = "none");
+const title = document.getElementById("title");
+

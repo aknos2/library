@@ -32,7 +32,7 @@
             
         </div>
 
-        <button id="add-button" type="button" onclick="openForm()">Add +</button>
+        <button id="add-button" type="button" >Add +</button>
     </div>
 
     <div class="form"  id="form">
@@ -40,7 +40,7 @@
             <h1>Fill up the form</h1>
 
             <label for="title"><b>Title:</b></label>
-            <input type="text" id="title" name="title" placeholder="Enter Book Title"><br><br>
+            <input type="text" id="title" name="title" placeholder="Enter Book Title" required><br><br>
 
             <label for="author"><b>Author:</b></label>
             <input type="text" id="author" name="author" placeholder="Enter authors'name"><br><br>
@@ -52,7 +52,7 @@
             <input type="checkbox" id="finished">
 
             <button type="submit" class="form-button">Add book</button>
-            <button type="button" class="form-button-cancel" onclick="closeForm()">Cancel</button>
+            <button type="button" class="form-button-cancel">Cancel</button>
         </form>
     </div>
     <script src="javascript.js"></script>
