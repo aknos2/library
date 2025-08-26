@@ -138,6 +138,24 @@ class UIController {
     addNewBook(event) {
         event.preventDefault();
         
+        const titleInput = document.getElementById("title");
+        const authorInput = document.getElementById("author");
+        const pagesInput = document.getElementById("pages");
+    
+        // Check if all fields are valid
+        if (!titleInput.checkValidity()) {
+            titleInput.reportValidity();
+            return;
+        }
+        if (!authorInput.checkValidity()) {
+            authorInput.reportValidity();
+            return;
+        }
+        if (!pagesInput.checkValidity()) {
+            pagesInput.reportValidity();
+            return;
+        }
+
         const title = document.getElementById("title").value;
         const author = document.getElementById("author").value;
         const pages = document.getElementById("pages").value;
@@ -214,5 +232,44 @@ document.getElementById("book-search-form").addEventListener("submit", event => 
 document.querySelector(".form-button").addEventListener("click", event => uiController.addNewBook(event));
 document.querySelector("#add-button").addEventListener("click", () => document.getElementById("form").style.display = "block");
 document.querySelector(".form-button-cancel").addEventListener("click", () => document.getElementById("form").style.display = "none");
-const title = document.getElementById("title");
+
+
+document.getElementById("title").addEventListener("input", event => {
+    const input = event.target;
+
+    // Custom validation logic
+    if (!input.value) {
+        input.setCustomValidity("Custom message: Title is required!"); // Your custom message
+    } else {
+        input.setCustomValidity(""); // Clear any custom messages when valid
+    }
+
+    input.reportValidity(); // Show the current validation message
+});
+
+document.getElementById("author").addEventListener("input", event => {
+    const input = event.target;
+
+    if (!input.value) {
+        input.setCustomValidity("Custom message: Author is required!"); // Your custom message
+    } else {
+        input.setCustomValidity(""); // Clear custom messages when valid
+    }
+
+    input.reportValidity();
+});
+
+document.getElementById("pages").addEventListener("input", event => {
+    const input = event.target;
+
+    if (input.validity.rangeUnderflow || input.value < 1) {
+        input.setCustomValidity("Pages must be at least 1."); // Custom range validation message
+    } else if (!input.value) {
+        input.setCustomValidity("Custom message: Pages are required!"); // Custom required message
+    } else {
+        input.setCustomValidity(""); // Clear any custom messages when valid
+    }
+
+    input.reportValidity();
+});
 

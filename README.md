@@ -1,7 +1,16 @@
 # library
-Create a basic library app. 8th project of Odin Project. 
+
+Create a basic library app. 8th project of Odin Project.
 The project will use object constructors to make the app.
 https://aknos2.github.io/library/
+
+## Website url
+
+https://aknos2.github.io/library/
+
+## Screenshots
+
+<img src="./imgs/screenshot.png" alt="screenshot">
 
 ### Image Credits
 
